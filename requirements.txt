@@ -1,0 +1,7 @@
+geopandas
+psycopg2
+GeoAlchemy2
+SQLAlchemy
+fastapi
+pandas
+uvicorn
