@@ -39,8 +39,9 @@ app.add_middleware(
 @app.post('/hexagons/')
 async def get_hex_data(model: OtucData):
     sql = f'''
-    SELECT * FROM hexagons WHERE year = {int(model.year)} AND month = {int(model.month)}
+    SELECT hex, avg("LOCATION_SPEED") as mean_speed, geom FROM hexagons WHERE year = {int(model.year)} AND month = {int(model.month)}
     AND day = {int(model.day)} AND hour = {int(model.hour)} AND minute = {int(model.minute)}
+    GROUP BY hex, geom
     '''
 
     with engine.connect() as connection:
