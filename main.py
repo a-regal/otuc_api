@@ -2,14 +2,22 @@ import geopandas as gpd
 from sqlalchemy import create_engine
 from fastapi import FastAPI
 from pydantic import BaseModel
+from fastapi.middleware.cors import CORSMiddleware
 
 class OtucData(BaseModel):
-    year: int
-    month: int
-    day: int
-    hour: int
-    minute: int
+    year: str
+    month: str
+    day: str
+    hour: str
+    minute: str
 
+origins = [
+    "*",
+    "http://localhost.tiangolo.com",
+    "https://localhost.tiangolo.com",
+    "http://localhost",
+    "http://localhost:8000",
+]
 
 ip = '0.0.0.0'
 socket = '5432'
@@ -20,11 +28,19 @@ password = 'otuc_test'
 engine = create_engine(f'postgresql://{user}:{password}@{ip}:{socket}/otuc')
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.post('/hexagons/')
 async def get_hex_data(model: OtucData):
     sql = f'''
-    SELECT * FROM hexagons WHERE year = {model.year} AND month = {model.month} AND day = {model.day} AND hour = {model.hour} AND minute = {model.minute}
+    SELECT * FROM hexagons WHERE year = {int(model.year)} AND month = {int(model.month)}
+    AND day = {int(model.day)} AND hour = {int(model.hour)} AND minute = {int(model.minute)}
     '''
 
     with engine.connect() as connection:

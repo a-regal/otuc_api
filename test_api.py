@@ -1,12 +1,16 @@
 import requests
+import json
 
 #Setup url to request
-endpoint = 'http://127.0.0.1:8000/hexagons'
+endpoint = 'http://127.0.0.1:8000/hexagons/'
 
 #Filter params for hex data
-payload = {'year':2018, 'month':9, 'day':7, 'hour':23, 'minute':48}
+payload = {'year':'2018', 'month':'9', 'day':'7', 'hour':'23', 'minute':'48'}
 
 #Profit
 response = requests.post(endpoint, json=payload)
 
 print(response.json())
+
+# with open('./hexs_speed.geojson', 'w')  as f:
+#     f.write(json.dumps(response.json()))
